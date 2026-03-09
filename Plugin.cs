@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace GameServerUtilsForWL {
+
     [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin {
         internal static new ManualLogSource Logger;
@@ -14,10 +15,23 @@ namespace GameServerUtilsForWL {
         public static Settings settings;
         private void Awake() {
             // Plugin startup logic
-            settings = JsonUtility.FromJson<Settings>(PlayerPrefs.GetString(MyPluginInfo.PLUGIN_GUID));
+            settings = JsonUtility.FromJson<Settings>(PlayerPrefs.GetString(MyPluginInfo.PLUGIN_GUID, JsonUtility.ToJson(new Settings())));
             HashCode = GetHashCode();
             Logger = base.Logger;
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
+        }
+
+        internal void Update() {
+            if (GameInstance.InstanceExists) {
+                foreach (var controller in GameInstance.Instance.GetPlayerControllers()) {
+                    if (controller.IsLocal() && controller.IsServer() && DedicatedServerMode) {
+                        controller.networkObject.Destroy();
+                    }
+                }
+                if (settings.patchVehicles) {
+                    VehicleManager.Instance.GetVehicles().ForEach(x => x.networkObject.Destroy());
+                }
+            }
         }
 
         private static int HashCode = 0;
@@ -46,8 +60,10 @@ namespace GameServerUtilsForWL {
                 SettingsLogic();
             if (GUILayout.Button("Confirm")) {
                 Setup = true;
-                if (!Setup)
+                if (!active) {
+                    settings = new();
                     return;
+                }
                 harmony = new(MyPluginInfo.PLUGIN_GUID);
                 harmony.PatchAll(Assembly.GetExecutingAssembly());
             }
@@ -60,7 +76,9 @@ namespace GameServerUtilsForWL {
             }
             settings.patchPropShop = GUILayout.Toggle(settings.patchPropShop, "Patch Prop Shop (Block Prop Shop Spawning)");
             settings.patchTrafficManager = GUILayout.Toggle(settings.patchTrafficManager, "Patch Traffic Manager (Block Npc Cars Spawning)");
-            PlayerPrefs.SetString(MyPluginInfo.PLUGIN_GUID, JsonUtility.ToJson(settings));
+            settings.patchJobs = GUILayout.Toggle(settings.patchJobs, "Patch Jobs (Block Jobs from Starting)");
+            settings.patchVehicles = GUILayout.Toggle(settings.patchVehicles, "Patch Vehicles (Remove Vehicles from the Game)");
+            if(!active) PlayerPrefs.SetString(MyPluginInfo.PLUGIN_GUID, JsonUtility.ToJson(settings));
         }
     }
 }
