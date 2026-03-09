@@ -1,0 +1,26 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path="../../../../SteamLibrary/steamapps/common/Wobbly Life/Wobbly Life.exe" />
+  </Folder>
+  <Project Path="../../../../SteamLibrary/steamapps/common/Wobbly Life/Wobbly Life.exe">
+    <BuildType Project="Release" />
+    <Platform Project="x64" />
+    <Properties Name="DebuggerProjectSystem">
+      <Property Name="AttachLaunchAction" Value="No" />
+      <Property Name="Environment" Value="Default" />
+      <Property Name="Executable" Value="D:\SteamLibrary\steamapps\common\Wobbly Life\Wobbly Life.exe" />
+      <Property Name="IORedirection" Value="Auto" />
+      <Property Name="LaunchingEngine" Value="00000000-0000-0000-0000-000000000000" />
+      <Property Name="LaunchSQLEngine" Value="No" />
+      <Property Name="PortSupplier" Value="00000000-0000-0000-0000-000000000000" />
+      <Property Name="RemoteMachine" Value="FLINTANDSTEEL" />
+      <Property Name="StartingDirectory" Value="D:\SteamLibrary\steamapps\common\Wobbly Life" />
+      <Property Name="UseLegacyDebugEngines" Value="No" />
+    </Properties>
+  </Project>
+  <Project Path="GameServerUtilsForWL.csproj" />
+</Solution>
