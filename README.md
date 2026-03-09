@@ -1,7 +1,6 @@
 allows customization for wl custom servers
 
-Features:
--
+## Features:
 - Dedicated Server Mode (No Local Character)
 - Job Patching (Blocks Jobs)
 - Vehicle Patching (Blocks Vehicles)
